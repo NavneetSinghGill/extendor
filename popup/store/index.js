@@ -42,13 +42,19 @@ function store(details) {
         storeDistanceLabel.setAttribute('class', 'popup-store-label popup-store-distance-label')
         storeDistanceLabel.innerHTML = details.distance;
 
+    var redirectionAnchor = document.createElement('a');
+    redirectionAnchor.setAttribute('class', 'popup-store-redirection-anchor');
+    redirectionAnchor.setAttribute('href', details.storeLink);
+    redirectionAnchor.setAttribute("target", "_blank");
+
     textContainerDiv.appendChild(storeNameLabel);
     textContainerDiv.appendChild(priceLabel);
-    // textContainerDiv.appendChild(storeDistanceLabel);
 
     divContainer.appendChild(storeImage);
     divContainer.appendChild(textContainerDiv);
     divContainer.appendChild(storeDistanceLabel);
+    divContainer.appendChild(redirectionAnchor);
+
     return divContainer;
 }
 
