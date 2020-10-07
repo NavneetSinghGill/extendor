@@ -25,28 +25,30 @@ function store(details) {
 
     var storeImage = document.createElement("img");
     storeImage.setAttribute('class', 'popup-store-image')
+    storeImage.setAttribute('src', details.storeImage)
     
     var textContainerDiv = document.createElement("div");
     textContainerDiv.setAttribute('class', 'popup-store-textContainer-div');
 
         var storeNameLabel = document.createElement("label");
         storeNameLabel.setAttribute('class', 'popup-store-label popup-store-name-label')
-        storeNameLabel.innerHTML = "STORE:   " + details.storeName;
+        storeNameLabel.innerHTML =  details.storeName;
         
         var priceLabel = document.createElement("label");
         priceLabel.setAttribute('class', 'popup-store-label popup-store-price-label')
-        priceLabel.innerHTML = "PRICE:   " + details.price;
+        priceLabel.innerHTML = details.price;
 
         var storeDistanceLabel = document.createElement("label");
         storeDistanceLabel.setAttribute('class', 'popup-store-label popup-store-distance-label')
-        storeDistanceLabel.innerHTML = "DISTANCE: " + details.distance;
+        storeDistanceLabel.innerHTML = details.distance;
 
     textContainerDiv.appendChild(storeNameLabel);
     textContainerDiv.appendChild(priceLabel);
-    textContainerDiv.appendChild(storeDistanceLabel);
+    // textContainerDiv.appendChild(storeDistanceLabel);
 
     divContainer.appendChild(storeImage);
     divContainer.appendChild(textContainerDiv);
+    divContainer.appendChild(storeDistanceLabel);
     return divContainer;
 }
 

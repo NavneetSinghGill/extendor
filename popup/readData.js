@@ -2,7 +2,7 @@ import * as storeFile from './store/index.js';
 // console.log(storeFile.store);
 
 function fetchDetails() {
-fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/02ee7ca113447085c4225f823af7b61309258f13/stores')
+fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/f4dbfe0ef2932aa79a4551c9ca6d9a7ec4b86388/stores')
   .then(
     function(response) {
         if (response.status !== 200) {
@@ -16,10 +16,8 @@ fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f
         console.log(data);
         // chrome.runtime.sendMessage({type: "popup_info"});
         
-        for(let dict of data) {
-          console.log(dict);
-          addStore(dict);
-        }
+        addPageHeader();
+        addStores(data);
       });
     }
   )
@@ -36,10 +34,28 @@ function addItem(key, value){
     ul.appendChild(li);
 }
 
-function addStore(details) {
+function addPageHeader() {
+  var main = document.getElementById("main");
+  
+  var pageHeader = document.createElement("div");
+  pageHeader.setAttribute("id", "pageHeader");
+
+  var label = document.createElement("label");
+  label.setAttribute('class', 'orm-label');
+  label.setAttribute("id", "pageHeaderLabel");
+  label.innerHTML = "One Red Maple";
+
+  pageHeader.appendChild(label);
+  main.appendChild(pageHeader);
+}
+
+function addStores(data) {
+  for(let detail of data) {
+    console.log(detail);
     var main = document.getElementById("main");
-    var store = storeFile.store(details);
+    var store = storeFile.store(detail);
     main.appendChild(store);
+  }
 }
 
 fetchDetails();
