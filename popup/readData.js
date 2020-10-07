@@ -1,4 +1,8 @@
-fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/fb89f5b75a4eb11bc3b4880c885fa679160b5312/stores')
+import * as storeFile from './store/index.js';
+// console.log(storeFile.store);
+
+function fetchDetails() {
+fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/02ee7ca113447085c4225f823af7b61309258f13/stores')
   .then(
     function(response) {
         if (response.status !== 200) {
@@ -11,11 +15,10 @@ fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f
       response.json().then(function(data) {
         console.log(data);
         // chrome.runtime.sendMessage({type: "popup_info"});
-        let dict = data[0];
-        console.log(dict);
-        for(key in dict) {
-            console.log(key + ": " + dict[key]);
-            addItem(key, dict[key]);
+        
+        for(let dict of data) {
+          console.log(dict);
+          addStore(dict);
         }
       });
     }
@@ -23,6 +26,7 @@ fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f
   .catch(function(err) {
     console.log('Fetch Error :-S', err);
   });
+}
 
 function addItem(key, value){
     var ul = document.getElementById("list");
@@ -31,3 +35,11 @@ function addItem(key, value){
     li.appendChild(document.createTextNode(key + ": " + value));
     ul.appendChild(li);
 }
+
+function addStore(details) {
+    var main = document.getElementById("main");
+    var store = storeFile.store(details);
+    main.appendChild(store);
+}
+
+fetchDetails();
