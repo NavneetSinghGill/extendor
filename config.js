@@ -1,5 +1,6 @@
 var config =  {}
 
-config.endpoint = "https://radiant-hamlet-20459.herokuapp.com/"
+// config.endpoint = "https://still-cove-55771.herokuapp.com/"
+config.endpoint = "http://localhost:3000";
 
-module.exports = config
+export default config;

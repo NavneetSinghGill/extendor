@@ -1,8 +1,10 @@
 import * as storeFile from './store/index.js';
+import config from '../config.js';
 // console.log(storeFile.store);
 
 function fetchDetails() {
-fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/692af7f68252fad05b18507d4dd0c93508dd511b/stores')
+console.log(config.endpoint)
+fetch(config.endpoint)
   .then(
     function(response) {
         if (response.status !== 200) {
