@@ -2,9 +2,9 @@ import * as storeFile from './store/index.js';
 import config from '../config.js';
 // console.log(storeFile.store);
 
-function fetchDetails() {
-console.log(config.endpoint)
-fetch(config.endpoint)
+function fetchDetails(asin) {
+  console.log(config.endpoint + "/getStores?asin=" + asin)
+  fetch(config.endpoint + "/getStores?asin=" + asin)
   .then(
     function(response) {
         if (response.status !== 200) {
@@ -60,4 +60,4 @@ function addStores(data) {
   }
 }
 
-fetchDetails();
+fetchDetails("B00CMUEYOE");
