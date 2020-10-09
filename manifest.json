@@ -14,9 +14,14 @@
     "scripts": [ "background.js" ],
     "persistent": false
   },
-  "browser_action": {
+  "page_action": {
+    "default_icon": {            
+      "16": "images/get_started16.png",
+      "24": "images/get_started32.png",
+      "32": "images/get_started32.png"
+    },
     "default_title": "Supporting locals..",
-    "default_popup": "popup/index.html"
+    "default_popup": "./popup/index.html"
   },
   "icons": {
     "16": "images/get_started16.png",

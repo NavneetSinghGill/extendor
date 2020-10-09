@@ -33,12 +33,23 @@
 //   });
 //   }
 // });
+chrome.pageAction.onClicked.addListener(function (tab) {
+//   chrome.tabs.executeScript({
+//     code: 'document.body.style.backgroundColor="red"'
+//   });
+  console.log("pageAction clicked");
+  // chrome.pageAction.show(tab.tabId, function () {
+  //   console.log("in");
+  // });
+
+  chrome.pageAction.setPopup({"popup": "./popup/index.html"}, () => {
+    console.log(tab);
+    chrome.pageAction.show(tab.tabId, () => {
+
+    })
+  })
+});
+
 // chrome.browserAction.onClicked.addListener(function (tab) {
-//   // chrome.tabs.executeScript({
-//   //   code: 'document.body.style.backgroundColor="red"'
-//   // });
-//   console.log("out");
-//   // chrome.pageAction.show(tab.tabId, function () {
-//   //   console.log("in");
-//   // });
+//     console.log("browserAction clicked");
 // });
