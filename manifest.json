@@ -15,9 +15,9 @@
     "persistent": false
   },
   "page_action": {
-    "default_icon": {            
+    "default_icon": {
       "16": "images/get_started16.png",
-      "24": "images/get_started32.png",
+      "24": "images/get_started24.png",
       "32": "images/get_started32.png"
     },
     "default_title": "Supporting locals..",

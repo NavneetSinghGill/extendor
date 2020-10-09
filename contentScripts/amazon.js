@@ -1,6 +1,14 @@
 console.log("Amazon");
 
-console.log(document.getElementById("ASIN").value)
+console.log("a" + document.getElementById("ASIN") + "a")
+if(document.getElementById("ASIN") != null){
+    chrome.runtime.sendMessage(
+    {
+        "message": "new_asin",
+        "value": document.getElementById("ASIN").value
+    }
+    );
+}
 
 // traverse(myTab)
 // fetch('https://gist.githubusercontent.com/NavneetSinghGill/e38b6c60bc499d70b805f0e034cf0b0e/raw/f67adcf069264eba4fd8d467b993f0619f76ff0e/stores')

@@ -53,3 +53,15 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 // chrome.browserAction.onClicked.addListener(function (tab) {
 //     console.log("browserAction clicked");
 // });
+
+chrome.runtime.onMessage.addListener(
+    function(request) {
+        if (request.message === "new_asin") {
+            chrome.tabs.getCurrent((tab) => {
+                console.log("tab: ", tab)
+                chrome.pageAction.show(tab.id, () => {
+                    console.log(request.value)
+                })
+            })
+        }
+});
