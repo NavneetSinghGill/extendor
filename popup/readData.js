@@ -55,7 +55,9 @@ function addStores(data) {
   for(let detail of data) {
     console.log(detail);
     var main = document.getElementById("main");
-    var store = storeFile.store(detail);
+    var store = storeFile.store(detail, {
+      description: true
+    });
     main.appendChild(store);
   }
 }

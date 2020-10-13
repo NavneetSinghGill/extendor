@@ -1,5 +1,5 @@
 // import "./style.css";
-function store(details) {
+function store(details, show) {
     var divContainer = document.createElement("div");
     divContainer.setAttribute('class', 'popup-store-divContainer');
 //     divContainer.style.backgroundColor = '#e5e5e5'
@@ -33,10 +33,19 @@ function store(details) {
         var storeNameLabel = document.createElement("label");
         storeNameLabel.setAttribute('class', 'popup-store-label popup-store-name-label')
         storeNameLabel.innerHTML =  details.storeName;
+        textContainerDiv.appendChild(storeNameLabel);
         
         var priceLabel = document.createElement("label");
         priceLabel.setAttribute('class', 'popup-store-label popup-store-price-label')
         priceLabel.innerHTML = details.price;
+        textContainerDiv.appendChild(priceLabel);
+
+        if(show && show.description) {
+            var descriptionLabel = document.createElement("label");
+            descriptionLabel.setAttribute('class', 'popup-store-label popup-store-description-label')
+            descriptionLabel.innerHTML = details.description;
+            textContainerDiv.appendChild(descriptionLabel);
+        }
 
         var storeDistanceLabel = document.createElement("label");
         storeDistanceLabel.setAttribute('class', 'popup-store-label popup-store-distance-label')
@@ -47,8 +56,6 @@ function store(details) {
     redirectionAnchor.setAttribute('href', details.storeLink);
     redirectionAnchor.setAttribute("target", "_blank");
 
-    textContainerDiv.appendChild(storeNameLabel);
-    textContainerDiv.appendChild(priceLabel);
 
     divContainer.appendChild(storeImage);
     divContainer.appendChild(textContainerDiv);
