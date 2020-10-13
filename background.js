@@ -33,21 +33,24 @@
 //   });
 //   }
 // });
+
+var currentASIN = ""
 chrome.pageAction.onClicked.addListener(function (tab) {
 //   chrome.tabs.executeScript({
 //     code: 'document.body.style.backgroundColor="red"'
 //   });
+  console.log("curr " + currentASIN)
   console.log("pageAction clicked");
   // chrome.pageAction.show(tab.tabId, function () {
   //   console.log("in");
   // });
 
-  chrome.pageAction.setPopup({"popup": "./popup/index.html"}, () => {
+  // chrome.pageAction.setPopup({"popup": "./popup/index.html"}, () => {
     console.log(tab);
     chrome.pageAction.show(tab.tabId, () => {
 
     })
-  })
+  // })
 });
 
 // chrome.browserAction.onClicked.addListener(function (tab) {
@@ -57,11 +60,19 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 chrome.runtime.onMessage.addListener(
     function(request) {
         if (request.message === "new_asin") {
-            chrome.tabs.getCurrent((tab) => {
-                console.log("tab: ", tab)
-                chrome.pageAction.show(tab.id, () => {
-                    console.log(request.value)
+          console.log(request)
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+              console.log(tabs)
+              var tab = tabs[0];
+              chrome.pageAction.setPopup({"tabId" :tab.id, "popup": "popup/index.html"}, () => {
+                if (tab) { // Sanity check
+                  console.log("tab: ", tab)
+                  chrome.pageAction.show(tab.id, () => {
+                  console.log(request.value)
+                  currentASIN = request.value;
                 })
-            })
+                }
+              })
+            });
         }
 });

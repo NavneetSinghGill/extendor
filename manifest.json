@@ -2,10 +2,10 @@
   "name": "OneRedMaple",
   "version": "1.0",
   "description": "Supporting locals..",
-  "permissions": [],
+  "permissions": ["tabs"],
   "content_scripts": [
     {
-      "matches": ["https://*.amazon.ca/*" ],
+      "matches": ["https://*/*" ],
       "js": [ "contentScripts/amazon.js" ],
       "persistent": false
     }
@@ -20,8 +20,7 @@
       "24": "images/get_started24.png",
       "32": "images/get_started32.png"
     },
-    "default_title": "Supporting locals..",
-    "default_popup": "./popup/index.html"
+    "default_title": "Supporting locals.."
   },
   "icons": {
     "16": "images/get_started16.png",
