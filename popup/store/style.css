@@ -40,7 +40,8 @@
 }
 .popup-store-description-label {
     flex: 1;
-    font-size: 0.7em;
+    font-size: 0.8em;
+    font-weight: normal;
 }
 .popup-store-distance-label {
     flex: 1;
