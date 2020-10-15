@@ -62,4 +62,6 @@ function addStores(data) {
   }
 }
 
-fetchDetails("B00CMUEYOE");
+var bg = chrome.extension.getBackgroundPage();
+console.log("Read ASIN: " + bg.currentASIN);
+fetchDetails(bg.currentASIN);

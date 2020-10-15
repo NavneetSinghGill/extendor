@@ -2,17 +2,17 @@
   "name": "OneRedMaple",
   "version": "1.0",
   "description": "Supporting locals..",
-  "permissions": ["tabs"],
+  "permissions": [ "storage", "contextMenus",
+    "activeTab", "tabs","clipboardRead", "clipboardWrite" ],
   "content_scripts": [
     {
-      "matches": ["https://*/*" ],
-      "js": [ "contentScripts/amazon.js" ],
-      "persistent": false
+      "matches": ["http://*/*", "https://*/*"],
+      "all_frames": true,
+      "js": [ "contentScripts/amazon.js" ]
     }
   ],
   "background": {
-    "scripts": [ "background.js" ],
-    "persistent": false
+    "scripts": [ "background.js" ]
   },
   "page_action": {
     "default_icon": {
