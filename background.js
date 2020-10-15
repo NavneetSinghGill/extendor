@@ -55,21 +55,8 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 });
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  console.log("active: ", activeInfo)
-
-  chrome.tabs.sendMessage(activeInfo.tabId, {"document": "ASIN"}, (response) => {
-    console.log("response back: ", response)
-    setASIN(response.value)
-  });
-
-  // var port = chrome.tabs.connect(activeInfo.tabId,  {
-  //   "name": "knockknock"
-  // })
-  // port.postMessage({"document": "ASIN"});
-  // port.onMessage.addListener(function(request) {
-  //   if (request.message === "new_asin")
-  //     currentASIN = responseCallback.ASIN
-  // });
+  console.log("onActivated: ", activeInfo)
+  chrome.tabs.sendMessage(activeInfo.tabId, {"document": "ASIN"});
 });
 
 
@@ -80,8 +67,10 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 chrome.runtime.onMessage.addListener(
     function(response) {
       console.log(response)
-      if (response.message === "new_asin") {
-        setASIN(response.value)
+      if(response != undefined) {
+        if (response.message === "new_asin") {
+          setASIN(response.value)
+        }
       }
 });
 

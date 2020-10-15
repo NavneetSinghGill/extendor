@@ -32,21 +32,23 @@ if(document.getElementById("ASIN") != null){
 
 chrome.runtime.onMessage.addListener(
     (message, sender, callback) => {
-        console.log("content S", document.getElementById(message.document).value);
-        if (message.document != undefined) {
-            let key = "new_asin"
-            let value = document.getElementById(message.document).value
-            // response({
-            //     key: value 
-            // });
-            callback({
-                "message": "new_asin",
-                "value": document.getElementById("ASIN").value
-            })
-            chrome.runtime.sendMessage({
-                "message": "new_asin",
-                "value": document.getElementById("ASIN").value
-            });
+        console.log("Amazon.js - On message: ", message);
+        if(message != null) {
+            if (message.document != undefined) {
+                let key = "new_asin"
+                let value = document.getElementById(message.document).value
+                // response({
+                //     key: value 
+                // });
+                // callback({
+                //     "message": "new_asin",
+                //     "value": document.getElementById("ASIN").value
+                // })
+                chrome.runtime.sendMessage({
+                    "message": "new_asin",
+                    "value": document.getElementById("ASIN").value
+                });
+            }
         }
     })
 
