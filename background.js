@@ -50,20 +50,20 @@ chrome.pageAction.onClicked.addListener(function (tab) {
       })
     // })
   // });
-  
-    
 });
 
+//Triggered when the tab is changed
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   console.log("onActivated: ", activeInfo)
+  //Request new ASIN from content script
   chrome.tabs.sendMessage(activeInfo.tabId, {"document": "ASIN"});
 });
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  chrome.tabs.sendMessage(tabId, {"document": "ASIN"});
+})
 
-// chrome.browserAction.onClicked.addListener(function (tab) {
-//     console.log("browserAction clicked");
-// });
-
+//Receives any message sent from other scripts
 chrome.runtime.onMessage.addListener(
     function(response) {
       console.log(response)
