@@ -1,32 +1,8 @@
-import * as storeFile from './store/index.js';
+import storeFile from './store/index.js';
 import config from '../config.js';
 // console.log(storeFile.store);
 
-function fetchDetails(asin) {
-  console.log(config.endpoint + "/getStores?asin=" + asin)
-  fetch(config.endpoint + "/getStores?asin=" + asin)
-  .then(
-    function(response) {
-        if (response.status !== 200) {
-        console.log('Looks like there was a problem. Status Code: ' +
-          response.status);
-        return;
-      }
 
-      // Examine the text in the response
-      response.json().then(function(data) {
-        console.log(data);
-        // chrome.runtime.sendMessage({type: "popup_info"});
-        
-        addPageHeader();
-        addStores(data);
-      });
-    }
-  )
-  .catch(function(err) {
-    console.log('Fetch Error :-S', err);
-  });
-}
 
 function addItem(key, value){
     var ul = document.getElementById("list");
@@ -36,25 +12,24 @@ function addItem(key, value){
     ul.appendChild(li);
 }
 
-function addPageHeader() {
-  var main = document.getElementById("main");
-  
-  var pageHeader = document.createElement("div");
-  pageHeader.setAttribute("id", "pageHeader");
+function addPageHeader(main) {  
+  if(main != null) {
+    var pageHeader = document.createElement("div");
+    pageHeader.setAttribute("id", "pageHeader");
 
-  var label = document.createElement("label");
-  label.setAttribute('class', 'orm-label');
-  label.setAttribute("id", "pageHeaderLabel");
-  label.innerHTML = "One Red Maple";
+    var label = document.createElement("label");
+    label.setAttribute('class', 'orm-label');
+    label.setAttribute("id", "pageHeaderLabel");
+    label.innerHTML = "One Red Maple";
 
-  pageHeader.appendChild(label);
-  main.appendChild(pageHeader);
+    pageHeader.appendChild(label);
+    main.appendChild(pageHeader);
+  }
 }
 
-function addStores(data) {
+function addStores(data, main) {
   for(let detail of data) {
     console.log(detail);
-    var main = document.getElementById("main");
     var store = storeFile.store(detail, {
       description: true
     });
@@ -64,4 +39,43 @@ function addStores(data) {
 
 var bg = chrome.extension.getBackgroundPage();
 console.log("Read ASIN: " + bg.currentASIN);
-fetchDetails(bg.currentASIN);
+fetchDetails(bg.currentASIN, false, () => {});
+
+export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
+  console.log("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL", config.endpoint + "/getStores?asin=" + asin)
+  fetch(config.endpoint + "/getStores?asin=" + asin)
+  .then(
+    function(response) {
+
+      if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      return;
+      }
+
+      // Examine the text in the response
+      response.json().then(function(data) {
+        console.log(data);
+        // chrome.runtime.sendMessage({type: "popup_info"});
+        
+        let mainDiv = document.getElementById('main');
+        if(shouldCreateNewContainer || mainDiv == null) {
+          mainDiv = document.createElement('div');
+          mainDiv.setAttribute('id', 'main');
+        }
+        console.log("MainDiv: ", mainDiv);
+        addPageHeader(mainDiv);
+        addStores(data, mainDiv);
+        console.log("MainDivAfter: ", mainDiv);
+
+        console.log("callback", callback);
+        callback(mainDiv);
+
+      });
+
+    }
+  )
+  .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+  });
+};

@@ -1,27 +1,8 @@
 // import "./style.css";
 function store(details, show) {
+
     var divContainer = document.createElement("div");
     divContainer.setAttribute('class', 'popup-store-divContainer');
-//     divContainer.style.backgroundColor = '#e5e5e5'
-
-//     var element = document.createElement("link");
-// element.setAttribute("rel", "stylesheet");
-// element.setAttribute("type", "text/css");
-// element.setAttribute("href", "style.css");
-// divContainer.appendChild(element);
-    
-    // var link = document.createElement('style.css');
-    // link.rel = 'stylesheet';  
-    // link.type = 'text/css'; 
-    // link.href = 'style.css'; 
-    // link.href = "style.css";
-    // divContainer.style = link;
-
-    // // Get the first script tag
-    // var ref = document.querySelector('script');
-
-    // // Insert our new styles before the first script tag
-    // ref.parentNode.insertBefore(link, ref);
 
     var storeImage = document.createElement("img");
     storeImage.setAttribute('class', 'popup-store-image')
@@ -65,4 +46,4 @@ function store(details, show) {
     return divContainer;
 }
 
-export {store};
+export default {store};

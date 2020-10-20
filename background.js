@@ -3,36 +3,17 @@
 // found in the LICENSE file.
 // Update the declarative rules on install or upgrade.
 
-// chrome.runtime.onInstalled.addListener(function() {
-//   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-//     chrome.declarativeContent.onPageChanged.addRules([{
-//       conditions: [
-//         // When a page contains a <video> tag...
-//         new chrome.declarativeContent.PageStateMatcher({
-//           css: ["video"]
-//         })
-//       ],
-//       // ... show the page action.
-//       actions: [new chrome.declarativeContent.ShowPageAction() ]
-//     }]);
-//   });
-// });
-// chrome.runtime.onMessage.addListener(function(request) {
-//   if (request.type === 'popup_info') {
-//     chrome.tabs.create({
-//       url: chrome.extension.getURL('popup/index.html'),
-//       active: false
-//   }, function(tab) {
-//       // After the tab has been created, open a window to inject the tab
-//       chrome.windows.create({
-//           tabId: tab.id,
-//           type: 'popup',
-//           focused: true
-//           // incognito, top, left, ...
-//       });
-//   });
-//   }
-// });
+let addPopupOverPage = (async () => {
+  let readDataPath = chrome.extension.getURL('./popup/readData.js');
+  let fetchDetails = await import(readDataPath);
+
+  fetchDetails.default(currentASIN, true, (mainDiv) => {
+    getActiveTab((tab) => {
+      console.log("Send message - mainDiv", mainDiv);
+      chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
+    });
+  });
+});
 
 var currentASIN = ""
 chrome.pageAction.onClicked.addListener(function (tab) {
@@ -69,14 +50,15 @@ chrome.runtime.onMessage.addListener(
       console.log(response)
       if(response != undefined) {
         if (response.message === "new_asin") {
-          setASIN(response.value)
+          setASIN(response.value);
+        } else if(response.message === "addPopupOverPage") {
+          addPopupOverPage();
         }
       }
 });
 
 function setASIN(asin) {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var tab = tabs[0];
+  getActiveTab((tab) => {
     chrome.pageAction.setPopup({"tabId" :tab.id, "popup": "popup/index.html"}, () => {
       if (tab) { // Sanity check
         console.log("tab: ", tab)
@@ -85,5 +67,14 @@ function setASIN(asin) {
       })
       }
     })
+  });
+}
+
+function getActiveTab(callback) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    var tab = tabs[0];
+    if(tab != undefined) {
+      callback(tab);
+    }
   });
 }

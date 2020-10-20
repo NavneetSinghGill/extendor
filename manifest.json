@@ -6,7 +6,7 @@
     "activeTab", "tabs","clipboardRead", "clipboardWrite" ],
   "content_scripts": [
     {
-      "matches": ["https://*.amazon.ca/*"],
+      "matches": ["https://*.amazon.ca/*", "http://*/*"],
       "js": [ "contentScripts/amazon.js" ],
       "persistent": false
     }
