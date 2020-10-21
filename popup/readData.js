@@ -31,7 +31,7 @@ function addStores(data, main) {
   for(let detail of data) {
     console.log(detail);
     var store = storeFile.store(detail, {
-      description: true
+      description: false
     });
     main.appendChild(store);
   }
@@ -42,7 +42,7 @@ console.log("Read ASIN: " + bg.currentASIN);
 fetchDetails(bg.currentASIN, false, () => {});
 
 export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
-  console.log("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL", config.endpoint + "/getStores?asin=" + asin)
+  console.log("FetchDetails called with endpoint: ", config.endpoint + "/getStores?asin=" + asin)
   fetch(config.endpoint + "/getStores?asin=" + asin)
   .then(
     function(response) {

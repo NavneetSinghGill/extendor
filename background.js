@@ -9,7 +9,7 @@ let addPopupOverPage = (async () => {
 
   fetchDetails.default(currentASIN, true, (mainDiv) => {
     getActiveTab((tab) => {
-      console.log("Send message - mainDiv", mainDiv);
+      console.log("Send message - mainDiv addPopupOverPage method", mainDiv);
       chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
     });
   });
@@ -49,17 +49,70 @@ chrome.runtime.onMessage.addListener(
     function(message, sender, callback) {
       console.log(message)
       if(message != undefined) {
+
         if (message.message === "new_asin") {
           setASIN(message.value);
         } else if(message.message === "addPopupOverPage") {
           // addPopupOverPage();
           fetchDetails.default(currentASIN, true, (mainDiv) => {
             getActiveTab((tab) => {
-              console.log("Send message - mainDiv", mainDiv);
+              console.log("Send message - mainDiv on message addPopupOverPage", mainDiv);
               callback({"mainDiv": mainDiv});
             });
           });
+        } else if(message.message === "executeReadData") {
+
+          (async () => {
+            let readDataPath = chrome.extension.getURL('./popup/readData.js');
+            let fetchDetails = await import(readDataPath);
+          
+            fetchDetails.default(currentASIN, true, (mainDiv) => {
+              getActiveTab((tab) => {
+
+                let div1 = document.createElement('div');
+                div1.setAttribute('id', 'dd1');
+                let div2 = document.createElement('div');
+                let div3 = document.createElement('div');
+                div2.appendChild(div3);
+                div1.appendChild(div2);
+
+                // console.log("Send message - mainDiv runtime on connect: ", div1);
+                // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
+                var mainDiv = div1.outerHTML;       
+                var data = { mainDiv: mainDiv }; 
+    
+                //  This gives you a string in JSON syntax of the object above that you can 
+                // send with XMLHttpRequest.
+                
+                var jsonMainDiv = JSON.stringify(data);
+                // port.postMessage({"jsonMainDiv": div1});
+                getActiveTab((tab) => {
+                  console.log("Send message - mainDiv runtime on connect: ", jsonMainDiv);
+                  chrome.tabs.sendMessage(tab.id,{"jsonMainDiv": jsonMainDiv});
+                });
+              });
+            });
+          })();
+
+          // let mainPageURL = chrome.runtime.getURL("popup/index.html");
+          // fetch(mainPageURL)
+          // .then((response) => {
+          //     return response.text();
+          // })
+          // .then((response) => {
+          //     console.log("Text html: ", response);
+          //     var parser = new DOMParser();
+          //     var mainPage = parser.parseFromString(response, 'text/html');
+          //     console.log("New begi url: ", mainPageURL); 
+          //     console.log("New begi: ", mainPage.body);
+
+          //     // chrome.tabs.executeScript({
+          //     //   file: "popup/readData.js"
+          //     // });
+          // });
+
         }
+
       }
 });
 
@@ -103,9 +156,15 @@ chrome.runtime.onConnect.addListener(function(port) {
       
         fetchDetails.default(currentASIN, true, (mainDiv) => {
           getActiveTab((tab) => {
-            console.log("Send message - mainDiv", mainDiv);
+            console.log("Send message - mainDiv runtime on connect: ", currentASIN, mainDiv);
             // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
-            port.postMessage({"mainDiv": "HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"});
+            var mainDiv = mainDiv.outerHTML;       
+            var data = { mainDiv: mainDiv }; 
+
+            //  This gives you a string in JSON syntax of the object above that you can 
+            // send with XMLHttpRequest.
+            var jsonMainDiv = JSON.stringify(data);
+            port.postMessage({"jsonMainDiv": jsonMainDiv});
           });
         });
       })();
