@@ -46,13 +46,19 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 //Receives any message sent from other scripts
 chrome.runtime.onMessage.addListener(
-    function(response) {
-      console.log(response)
-      if(response != undefined) {
-        if (response.message === "new_asin") {
-          setASIN(response.value);
-        } else if(response.message === "addPopupOverPage") {
-          addPopupOverPage();
+    function(message, sender, callback) {
+      console.log(message)
+      if(message != undefined) {
+        if (message.message === "new_asin") {
+          setASIN(message.value);
+        } else if(message.message === "addPopupOverPage") {
+          // addPopupOverPage();
+          fetchDetails.default(currentASIN, true, (mainDiv) => {
+            getActiveTab((tab) => {
+              console.log("Send message - mainDiv", mainDiv);
+              callback({"mainDiv": mainDiv});
+            });
+          });
         }
       }
 });
@@ -78,3 +84,31 @@ function getActiveTab(callback) {
     }
   });
 }
+
+// var port = chrome.runtime.connect({name: "contentScript"});
+// port.postMessage({connection: "AmazonToBackgroundScript"});
+// port.onMessage.addListener(function(message) {
+//   if (message.mainDiv != undefined)
+//     console.log("Port message received: ", message.mainDiv);
+// });
+
+chrome.runtime.onConnect.addListener(function(port) {
+  // console.assert(port.name == "knockknock");
+  port.onMessage.addListener(function(message) {
+    if (message.connection == "addPopupOverPage")
+
+      (async () => {
+        let readDataPath = chrome.extension.getURL('./popup/readData.js');
+        let fetchDetails = await import(readDataPath);
+      
+        fetchDetails.default(currentASIN, true, (mainDiv) => {
+          getActiveTab((tab) => {
+            console.log("Send message - mainDiv", mainDiv);
+            // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
+            port.postMessage({"mainDiv": "HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"});
+          });
+        });
+      })();
+      
+  });
+});
