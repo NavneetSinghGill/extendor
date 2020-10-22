@@ -9,7 +9,6 @@
     align-items: center;
     border-bottom: 1px solid;
     border-bottom-color: var(--border-color);
-    /* overflow: scroll; */
 }
 .popup-store-image {
     width: 50px;

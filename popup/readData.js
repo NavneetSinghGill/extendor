@@ -65,7 +65,11 @@ export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
         }
         console.log("MainDiv: ", mainDiv);
         addPageHeader(mainDiv);
-        addStores(data, mainDiv);
+
+        let popupStoreDivContainer = document.createElement('div');
+        popupStoreDivContainer.setAttribute("class", "popupStoreDiv");
+        addStores(data, popupStoreDivContainer);
+        mainDiv.appendChild(popupStoreDivContainer);
         console.log("MainDivAfter: ", mainDiv);
 
         console.log("callback", callback);
