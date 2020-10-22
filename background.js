@@ -3,18 +3,6 @@
 // found in the LICENSE file.
 // Update the declarative rules on install or upgrade.
 
-let addPopupOverPage = (async () => {
-  let readDataPath = chrome.extension.getURL('./popup/readData.js');
-  let fetchDetails = await import(readDataPath);
-
-  fetchDetails.default(currentASIN, true, (mainDiv) => {
-    getActiveTab((tab) => {
-      console.log("Send message - mainDiv addPopupOverPage method", mainDiv);
-      chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
-    });
-  });
-});
-
 var currentASIN = ""
 chrome.pageAction.onClicked.addListener(function (tab) {
   console.log("curr " + currentASIN)
@@ -52,14 +40,6 @@ chrome.runtime.onMessage.addListener(
 
         if (message.message === "new_asin") {
           setASIN(message.value);
-        } else if(message.message === "addPopupOverPage") {
-          // addPopupOverPage();
-          fetchDetails.default(currentASIN, true, (mainDiv) => {
-            getActiveTab((tab) => {
-              console.log("Send message - mainDiv on message addPopupOverPage", mainDiv);
-              callback({"mainDiv": mainDiv});
-            });
-          });
         } else if(message.message === "executeReadData") {
 
           (async () => {
@@ -68,58 +48,27 @@ chrome.runtime.onMessage.addListener(
           
             fetchDetails.default(currentASIN, true, (div) => {
               getActiveTab((tab) => {
-
-                // let div1 = document.createElement('div');
-                // div1.setAttribute('id', 'dd1');
-                // let div2 = document.createElement('div');
-                // let div3 = document.createElement('div');
-                // div2.appendChild(div3);
-                // div1.appendChild(div2);
-
-                // console.log("Send message - mainDiv runtime on connect: ", div1);
-                // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
                 var mainDiv = div.outerHTML;       
                 var data = { mainDiv: mainDiv }; 
     
-                //  This gives you a string in JSON syntax of the object above that you can 
-                // send with XMLHttpRequest.
-                
+                //  This gives you a string in JSON syntax of the object above that you can send with XMLHttpRequest.
                 var jsonMainDiv = JSON.stringify(data);
-                // port.postMessage({"jsonMainDiv": div1});
+
+                //Load css before doing elements
                 chrome.tabs.insertCSS({
                   file: "popup/style.css"
                 });
                 chrome.tabs.insertCSS({
                   file: "popup/store/style.css"
                 });
+
                 getActiveTab((tab) => {
                   console.log("Send message - mainDiv runtime on connect: ", jsonMainDiv);
                   chrome.tabs.sendMessage(tab.id,{"jsonMainDiv": jsonMainDiv});
                 });
-
-                // chrome.tabs.executeScript({
-                //   file: "popup/readData.js"
-                // });
               });
             });
           })();
-
-          // let mainPageURL = chrome.runtime.getURL("popup/index.html");
-          // fetch(mainPageURL)
-          // .then((response) => {
-          //     return response.text();
-          // })
-          // .then((response) => {
-          //     console.log("Text html: ", response);
-          //     var parser = new DOMParser();
-          //     var mainPage = parser.parseFromString(response, 'text/html');
-          //     console.log("New begi url: ", mainPageURL); 
-          //     console.log("New begi: ", mainPage.body);
-
-          //     // chrome.tabs.executeScript({
-          //     //   file: "popup/readData.js"
-          //     // });
-          // });
 
         }
 
@@ -147,37 +96,3 @@ function getActiveTab(callback) {
     }
   });
 }
-
-// var port = chrome.runtime.connect({name: "contentScript"});
-// port.postMessage({connection: "AmazonToBackgroundScript"});
-// port.onMessage.addListener(function(message) {
-//   if (message.mainDiv != undefined)
-//     console.log("Port message received: ", message.mainDiv);
-// });
-
-chrome.runtime.onConnect.addListener(function(port) {
-  // console.assert(port.name == "knockknock");
-  port.onMessage.addListener(function(message) {
-    if (message.connection == "addPopupOverPage")
-
-      (async () => {
-        let readDataPath = chrome.extension.getURL('./popup/readData.js');
-        let fetchDetails = await import(readDataPath);
-      
-        fetchDetails.default(currentASIN, true, (mainDiv) => {
-          getActiveTab((tab) => {
-            console.log("Send message - mainDiv runtime on connect: ", currentASIN, mainDiv);
-            // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
-            var mainDiv = mainDiv.outerHTML;       
-            var data = { mainDiv: mainDiv }; 
-
-            //  This gives you a string in JSON syntax of the object above that you can 
-            // send with XMLHttpRequest.
-            var jsonMainDiv = JSON.stringify(data);
-            port.postMessage({"jsonMainDiv": jsonMainDiv});
-          });
-        });
-      })();
-      
-  });
-});
