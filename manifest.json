@@ -3,7 +3,9 @@
   "version": "1.0",
   "description": "Supporting locals..",
   "permissions": [ "storage", "contextMenus",
-    "activeTab", "tabs","clipboardRead", "clipboardWrite" ],
+    "activeTab", "tabs","clipboardRead", "clipboardWrite",
+    "http://*/*",
+    "https://*/*" ],
   "content_scripts": [
     {
       "matches": ["https://*.amazon.ca/*", "http://*/*"],

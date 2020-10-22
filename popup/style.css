@@ -1,19 +1,22 @@
 :root {
     --border-color:#eeeeee;
 }
-body {
+#bodyContainer {
     width: 360px;
     height: 600px;
     display: flex;
     padding: 0px;
     margin: 0px;
-    background-color: transparent;
+    background-color: white;
     font-family: SuisseIntl,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-size: 15px;
 
     position: fixed;
-    right: 20;
-    top: 20;
+    right: 20px;
+    top: 20px;
+    box-shadow: 0px 0px 30px 2px grey;
+    z-index: 1000000;
+    overflow: scroll;
 }
 .orm-label {
     font-weight: bold;
@@ -21,7 +24,9 @@ body {
 }
 #main {
     flex: 1;
-    overflow: scroll;
+    /* overflow: scroll; */
+    z-index: 1000000;
+    box-shadow: '0px 0px 30px 2px grey';
 }
 #pageHeader {
     width: 100%;

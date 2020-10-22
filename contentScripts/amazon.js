@@ -123,21 +123,25 @@ chrome.runtime.onMessage.addListener(
                 let parsedValue1 = JSON.parse(message.jsonMainDiv).mainDiv;
 
                 let div = document.createElement('div');
+                div.setAttribute('id', 'bodyContainer');
                 
-                div.style.zIndex = '100000';
-                div.style.width = '300px';
-                div.style.height = '600px';
-                div.style.position = 'fixed';
-                div.style.top = '20px';
-                div.style.right = '20px';
-                div.style.backgroundColor = 'red';
-                div.style.borderColor = 'black';
-                div.style.borderWidth = '2px';
+                // div.style.zIndex = '100000';
+                // div.style.width = '300px';
+                // div.style.height = '600px';
+                // div.style.position = 'fixed';
+                // div.style.top = '20px';
+                // div.style.right = '20px';
+                // div.style.backgroundColor = 'white';
+                // div.style.borderColor = 'black';
+                // div.style.borderWidth = '2px';
+                // div.style.boxShadow = '0px 0px 30px 2px grey';
+                // div.style.borderRadius = '5px';
+                // div.style.overflow = 'scroll';
                 
                 document.body.appendChild(div);
                 div.innerHTML = parsedValue1;
 
-                console.log("jsonMainDiv:::::::::::::::::::::::: ", newDiv);
+                console.log("jsonMainDiv:::::::::::::::::::::::: ", div.childNodes);
             }
         }
     }

@@ -66,19 +66,19 @@ chrome.runtime.onMessage.addListener(
             let readDataPath = chrome.extension.getURL('./popup/readData.js');
             let fetchDetails = await import(readDataPath);
           
-            fetchDetails.default(currentASIN, true, (mainDiv) => {
+            fetchDetails.default(currentASIN, true, (div) => {
               getActiveTab((tab) => {
 
-                let div1 = document.createElement('div');
-                div1.setAttribute('id', 'dd1');
-                let div2 = document.createElement('div');
-                let div3 = document.createElement('div');
-                div2.appendChild(div3);
-                div1.appendChild(div2);
+                // let div1 = document.createElement('div');
+                // div1.setAttribute('id', 'dd1');
+                // let div2 = document.createElement('div');
+                // let div3 = document.createElement('div');
+                // div2.appendChild(div3);
+                // div1.appendChild(div2);
 
                 // console.log("Send message - mainDiv runtime on connect: ", div1);
                 // chrome.tabs.sendMessage(tab.id, {"mainDiv": mainDiv});
-                var mainDiv = div1.outerHTML;       
+                var mainDiv = div.outerHTML;       
                 var data = { mainDiv: mainDiv }; 
     
                 //  This gives you a string in JSON syntax of the object above that you can 
@@ -86,10 +86,20 @@ chrome.runtime.onMessage.addListener(
                 
                 var jsonMainDiv = JSON.stringify(data);
                 // port.postMessage({"jsonMainDiv": div1});
+                chrome.tabs.insertCSS({
+                  file: "popup/style.css"
+                });
+                chrome.tabs.insertCSS({
+                  file: "popup/store/style.css"
+                });
                 getActiveTab((tab) => {
                   console.log("Send message - mainDiv runtime on connect: ", jsonMainDiv);
                   chrome.tabs.sendMessage(tab.id,{"jsonMainDiv": jsonMainDiv});
                 });
+
+                // chrome.tabs.executeScript({
+                //   file: "popup/readData.js"
+                // });
               });
             });
           })();

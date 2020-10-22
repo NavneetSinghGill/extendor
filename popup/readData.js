@@ -31,7 +31,7 @@ function addStores(data, main) {
   for(let detail of data) {
     console.log(detail);
     var store = storeFile.store(detail, {
-      description: false
+      description: true
     });
     main.appendChild(store);
   }
