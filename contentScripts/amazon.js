@@ -7,9 +7,9 @@ if(document.getElementById("ASIN") != null){
         "value": document.getElementById("ASIN").value
     });
 
-    chrome.runtime.sendMessage({
-        "message": "executeReadData",
-    });
+    // chrome.runtime.sendMessage({
+    //     "message": "executeReadData",
+    // });
 }
 
 chrome.runtime.onMessage.addListener(
@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
                 let parsedValue1 = JSON.parse(message.jsonMainDiv).mainDiv;
 
                 let div = document.createElement('div');
-                div.setAttribute('id', 'bodyContainer');
+                div.setAttribute('id', 'oneRedMaple');
                 
                 document.body.appendChild(div);
                 div.innerHTML = parsedValue1;

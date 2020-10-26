@@ -1,8 +1,5 @@
 import storeFile from './store/index.js';
 import config from '../config.js';
-// console.log(storeFile.store);
-
-
 
 function addItem(key, value){
     var ul = document.getElementById("list");
@@ -28,12 +25,14 @@ function addPageHeader(main) {
 }
 
 function addStores(data, main) {
-  for(let detail of data) {
-    console.log(detail);
-    var store = storeFile.store(detail, {
-      description: true
-    });
-    main.appendChild(store);
+  for(let detail of data.reverse()) {
+    // console.log(detail);
+    if(detail.shouldShow == 1) {
+      var store = storeFile.store(detail, {
+        description: false
+      });
+      main.appendChild(store);
+    }
   }
 }
 
@@ -55,24 +54,18 @@ export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
 
       // Examine the text in the response
       response.json().then(function(data) {
-        console.log(data);
-        // chrome.runtime.sendMessage({type: "popup_info"});
         
         let mainDiv = document.getElementById('main');
         if(shouldCreateNewContainer || mainDiv == null) {
           mainDiv = document.createElement('div');
           mainDiv.setAttribute('id', 'main');
         }
-        console.log("MainDiv: ", mainDiv);
         addPageHeader(mainDiv);
 
         let popupStoreDivContainer = document.createElement('div');
         popupStoreDivContainer.setAttribute("class", "popupStoreDiv");
         addStores(data, popupStoreDivContainer);
         mainDiv.appendChild(popupStoreDivContainer);
-        console.log("MainDivAfter: ", mainDiv);
-
-        console.log("callback", callback);
         callback(mainDiv);
 
       });

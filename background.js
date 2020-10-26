@@ -5,15 +5,13 @@
 
 var currentASIN = ""
 chrome.pageAction.onClicked.addListener(function (tab) {
-  console.log("curr " + currentASIN)
-  console.log("pageAction clicked");
+  console.log("PageAction clicked: " + currentASIN + " " + tab);
   // chrome.pageAction.show(tab.tabId, function () {
   //   console.log("in");
   // });
   // chrome.tabs.sendMessage(tab.tabId, {"document": "ASIN"}, (response) => {
   //   console.log("resp: ", response);
     // chrome.pageAction.setPopup({"popup": "./popup/index.html"}, () => {  
-      console.log(tab);
       chrome.pageAction.show(tab.tabId, () => {
   
       })
@@ -35,40 +33,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 //Receives any message sent from other scripts
 chrome.runtime.onMessage.addListener(
     function(message, sender, callback) {
-      console.log(message)
+      console.log("OnMessage received: ", message);
       if(message != undefined) {
 
         if (message.message === "new_asin") {
           setASIN(message.value);
         } else if(message.message === "executeReadData") {
-
-          (async () => {
-            let readDataPath = chrome.extension.getURL('./popup/readData.js');
-            let fetchDetails = await import(readDataPath);
-          
-            fetchDetails.default(currentASIN, true, (div) => {
-              getActiveTab((tab) => {
-                var mainDiv = div.outerHTML;       
-                var data = { mainDiv: mainDiv }; 
-    
-                //  This gives you a string in JSON syntax of the object above that you can send with XMLHttpRequest.
-                var jsonMainDiv = JSON.stringify(data);
-
-                //Load css before doing elements
-                chrome.tabs.insertCSS({
-                  file: "popup/style.css"
-                });
-                chrome.tabs.insertCSS({
-                  file: "popup/store/style.css"
-                });
-
-                getActiveTab((tab) => {
-                  console.log("Send message - mainDiv runtime on connect: ", jsonMainDiv);
-                  chrome.tabs.sendMessage(tab.id,{"jsonMainDiv": jsonMainDiv});
-                });
-              });
-            });
-          })();
 
         }
 
@@ -82,6 +52,8 @@ function setASIN(asin) {
         console.log("tab: ", tab)
         chrome.pageAction.show(tab.id, () => {
           currentASIN = asin;
+
+          performFetchDetails();
       })
       }
     })
@@ -95,4 +67,34 @@ function getActiveTab(callback) {
       callback(tab);
     }
   });
+}
+
+function performFetchDetails() {
+  (async () => {
+    let readDataPath = chrome.extension.getURL('./popup/readData.js');
+    let fetchDetails = await import(readDataPath);
+  
+    fetchDetails.default(currentASIN, true, (div) => {
+      getActiveTab((tab) => {
+        var mainDiv = div.outerHTML;       
+        var data = { mainDiv: mainDiv }; 
+
+        //  This gives you a string in JSON syntax of the object above that you can send with XMLHttpRequest.
+        var jsonMainDiv = JSON.stringify(data);
+
+        //Load css before doing elements
+        chrome.tabs.insertCSS({
+          file: "popup/style.css"
+        });
+        chrome.tabs.insertCSS({
+          file: "popup/store/style.css"
+        });
+
+        getActiveTab((tab) => {
+          console.log("Send message - mainDiv runtime on connect: ", jsonMainDiv);
+          chrome.tabs.sendMessage(tab.id,{"jsonMainDiv": jsonMainDiv});
+        });
+      });
+    });
+  })();
 }
