@@ -2,14 +2,14 @@
 //Fetch the details using ASIN
 console.log("ASIN document", document.getElementById("ASIN"))
 if(document.getElementById("ASIN") != null){
-    chrome.runtime.sendMessage({
-        "message": "new_asin",
-        "value": document.getElementById("ASIN").value
-    });
+
+    //Commented because it will be triggered from onUpdated in background.js
 
     // chrome.runtime.sendMessage({
-    //     "message": "executeReadData",
+    //     "message": "new_asin",
+    //     "value": document.getElementById("ASIN").value
     // });
+
 }
 
 chrome.runtime.onMessage.addListener(
@@ -31,6 +31,10 @@ chrome.runtime.onMessage.addListener(
                 div.innerHTML = parsedValue1;
 
                 console.log("jsonMainDiv:::::::::::::::::::::::: ", div.childNodes);
+            } else if(message.deleteDocument != undefined) {
+                let elementToDelete = document.getElementById(message.deleteDocument)
+                elementToDelete.parentElement.removeChild(elementToDelete);
+                callback();
             }
         }
     }

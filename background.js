@@ -21,9 +21,11 @@ chrome.pageAction.onClicked.addListener(function (tab) {
 
 //Triggered when the tab is changed
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  console.log("onActivated: ", activeInfo)
+  console.log("onActivated: ", activeInfo);
   //Request new ASIN from content script
-  chrome.tabs.sendMessage(activeInfo.tabId, {"document": "ASIN"});
+  // chrome.tabs.sendMessage(activeInfo.tabId, {"deleteDocument": "oneRedMaple"}, () => {
+  //   chrome.tabs.sendMessage(activeInfo.tabId, {"document": "ASIN"});
+  // });
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

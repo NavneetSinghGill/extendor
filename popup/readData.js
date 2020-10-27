@@ -17,9 +17,28 @@ function addPageHeader(main) {
     var label = document.createElement("label");
     label.setAttribute('class', 'orm-label');
     label.setAttribute("id", "pageHeaderLabel");
-    label.innerHTML = "One Red Maple";
-
+    label.innerHTML = "ONE RED MAPLE";
     pageHeader.appendChild(label);
+
+    var imageButtonDiv = document.createElement("div");
+    imageButtonDiv.setAttribute('class', 'cross-div');
+
+      var crossImage = document.createElement("img");
+      crossImage.setAttribute('class', 'cross-img');
+      crossImage.setAttribute('src', 'https://i7.pngguru.com/preview/374/17/266/5bbc4a650342a.jpg');
+      imageButtonDiv.appendChild(crossImage);
+
+      var crossButton = document.createElement("button");
+      crossButton.setAttribute('class', 'cross-button');
+      crossButton.addEventListener("click", () => {
+        console.log("remove orm");
+        let orm = document.getElementById('oneRedMaple');
+        orm.parentElement.removeChild(orm);
+      });
+      imageButtonDiv.appendChild(crossButton);
+
+    // pageHeader.appendChild(imageButtonDiv);
+    
     main.appendChild(pageHeader);
   }
 }
