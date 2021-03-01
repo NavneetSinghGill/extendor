@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 // Update the declarative rules on install or upgrade.
 
-var currentASIN = ""
+var shared = {}
 chrome.pageAction.onClicked.addListener(function (tab) {
-  console.log("PageAction clicked: " + currentASIN + " " + tab);
+  console.log("PageAction clicked: " + shared.id + " " + tab);
   // chrome.pageAction.show(tab.tabId, function () {
   //   console.log("in");
   // });
@@ -29,6 +29,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  //Asks to get ASIN because the tab is updated
   chrome.tabs.sendMessage(tabId, {"document": "ASIN"});
 })
 
@@ -47,14 +48,13 @@ chrome.runtime.onMessage.addListener(
       }
 });
 
-function setASIN(asin) {
+function setASIN(newState) {
   getActiveTab((tab) => {
     chrome.pageAction.setPopup({"tabId" :tab.id, "popup": "popup/index.html"}, () => {
       if (tab) { // Sanity check
         console.log("tab: ", tab)
         chrome.pageAction.show(tab.id, () => {
-          currentASIN = asin;
-
+          shared = newState;
           performFetchDetails();
       })
       }
@@ -76,7 +76,7 @@ function performFetchDetails() {
     let readDataPath = chrome.extension.getURL('./popup/readData.js');
     let fetchDetails = await import(readDataPath);
   
-    fetchDetails.default(currentASIN, true, (div) => {
+    fetchDetails.default(shared, true, (div) => {
       getActiveTab((tab) => {
         var mainDiv = div.outerHTML;       
         var data = { mainDiv: mainDiv }; 

@@ -16,7 +16,17 @@ chrome.runtime.onMessage.addListener(
     (message, sender, callback) => {
         console.log("amazon.js - On message: ", message);
         if(message != null) {
-            if (message.document != undefined) {
+            if(message.document == "ASIN") {
+                var newState = {
+                    "id" : document.getElementById("ASIN").value,
+                    "text": document.title
+                }
+                console.log("newState: ", newState);
+                chrome.runtime.sendMessage({
+                    "message": "new_asin",
+                    "value": newState
+                });
+            } else if (message.document != undefined) {
                 chrome.runtime.sendMessage({
                     "message": "new_asin",
                     "value": document.getElementById(message.document).value

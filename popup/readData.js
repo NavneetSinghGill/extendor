@@ -1,5 +1,6 @@
 import storeFile from './store/index.js';
 import config from '../config.js';
+import helper from '../utility/helper.js';
 
 function addItem(key, value){
     var ul = document.getElementById("list");
@@ -44,36 +45,48 @@ function addPageHeader(main) {
 }
 
 function addStores(data, main) {
-  for(let detail of data.reverse()) {
+  for(let detail of data.slice(0, 5)) {
     // console.log(detail);
-    if(detail.shouldShow == 1) {
-      var store = storeFile.store(detail, {
+    // if(detail.shouldShow == 1) {
+      var store = storeFile.store(detail.document, {
         description: false
       });
       main.appendChild(store);
-    }
+    // }
   }
 }
 
 var bg = chrome.extension.getBackgroundPage();
-console.log("Read ASIN: " + bg.currentASIN);
-fetchDetails(bg.currentASIN, false, () => {});
+console.log("Read ASIN: " + bg.shared.id);
+fetchDetails(bg.shared, false, () => {});
 
-export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
-  console.log("FetchDetails called with endpoint: ", config.endpoint + "/getStores?asin=" + asin)
-  fetch(config.endpoint + "/getStores?asin=" + asin)
-  .then(
-    function(response) {
-
-      if (response.status !== 200) {
-      console.log('Looks like there was a problem. Status Code: ' +
-        response.status);
+export default function fetchDetails(state, shouldCreateNewContainer, callback) {
+  var url = config.endpoint + "/get/products";
+  var queryParamCount = 0
+  var urlQuery = ""
+  if(state.text != undefined) {
+    urlQuery = "text=" + encodeURIComponent(state.text);
+    queryParamCount = queryParamCount + 1;
+  }
+  if(state.id != undefined) {
+    if(queryParamCount > 0) {
+      urlQuery = urlQuery + "&"
+    }
+    urlQuery = urlQuery + "id=" + state.id
+  }
+  if(urlQuery.length != 0) {
+    url = url + "?" + urlQuery
+  }
+  console.log("Fetchdetails called with endpoint: ", url);
+  fetch(url)
+  .then((response) => {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ', response.status);
       return;
-      }
+    }
+    response.json().then(function(data) {
+      console.log(data);
 
-      // Examine the text in the response
-      response.json().then(function(data) {
-        
         let mainDiv = document.getElementById('main');
         if(shouldCreateNewContainer || mainDiv == null) {
           mainDiv = document.createElement('div');
@@ -87,11 +100,47 @@ export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
         mainDiv.appendChild(popupStoreDivContainer);
         callback(mainDiv);
 
-      });
 
-    }
-  )
+    })
+  })
   .catch(function(err) {
     console.log('Fetch Error :-S', err);
   });
-};
+}
+
+// export default function fetchDetails(asin, shouldCreateNewContainer, callback) {
+//   console.log("FetchDetails called with endpoint: ", config.endpoint + "/getStores?asin=" + asin)
+//   fetch(config.endpoint + "/getStores?asin=" + asin)
+//   .then(
+//     function(response) {
+
+//       if (response.status !== 200) {
+//       console.log('Looks like there was a problem. Status Code: ' +
+//         response.status);
+//       return;
+//       }
+
+//       // Examine the text in the response
+//       response.json().then(function(data) {
+        
+//         let mainDiv = document.getElementById('main');
+//         if(shouldCreateNewContainer || mainDiv == null) {
+//           mainDiv = document.createElement('div');
+//           mainDiv.setAttribute('id', 'main');
+//         }
+//         addPageHeader(mainDiv);
+
+//         let popupStoreDivContainer = document.createElement('div');
+//         popupStoreDivContainer.setAttribute("class", "popupStoreDiv");
+//         addStores(data, popupStoreDivContainer);
+//         mainDiv.appendChild(popupStoreDivContainer);
+//         callback(mainDiv);
+
+//       });
+
+//     }
+//   )
+//   .catch(function(err) {
+//     console.log('Fetch Error :-S', err);
+//   });
+// };
